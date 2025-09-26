@@ -19,3 +19,4 @@ repos:
     hooks:
     -   id: mypy
         name: Type check python code
+        args: ["--ignore-missing-imports"]

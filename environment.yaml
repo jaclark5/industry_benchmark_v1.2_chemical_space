@@ -1,13 +1,19 @@
 name: ibcs
 
 channels:
-  conda-forge
-  openeye
+  - conda-forge
+  - openeye
 
 dependencies:
-  python >= 3.11
-  numpy
-  pandas
-  qcportal
-  rdkit
-  openeye-toolkits
+  - python >= 3.11
+  - numpy
+  - pandas
+  - qcportal
+  - rdkit
+  - openeye-toolkits
+
+  # Dev
+  - pre-commit
+  - loguru
+  - ruff
+  - mypy

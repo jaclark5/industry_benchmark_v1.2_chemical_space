@@ -1,0 +1,7 @@
+Warning: [c:1]1([H:24])[c:2]([H:25])[c:5]([H:28])[c:12]2[c:11]([c:4]1[H:27])[c:7]([H:30])[c:8]([H:31])[c:15]1[c:13]2[C:10]([H:33])=[C:14](/[C:18](=[N:20]/[C:16]2=[C:6]([H:29])[C:3]([H:26])=[C:9]([H:32])[S:23]2)[O:21][H:35])/[C:17](=[N:19]/[H:34])[O:22]1
+Warning: Problem parsing SMILES:
+Warning: Inconsistent cis/trans bond stereo.
+Warning: [c:1]1([H:24])[c:2]([H:25])[c:5]([H:28])[c:12]2[c:11]([c:4]1[H:27])[c:7]([H:30])[c:8]([H:31])[c:15]1[c:13]2[C:10]([H:33])=[C:14](/[C:18](=[N:20]/[C:16]2=[C:6]([H:29])[C:3]([H:26])=[C:9]([H:32])[S:23]2)[O:21][H:35])/[C:17](=[N:19]/[H:34])[O:22]1
+2025-09-26 13:42:22.544 | INFO     | __main__:<module>:65 - Added Circular, MACCS, and LINGO fingerprints for each CMILES string.
+2025-09-26 13:42:22.550 | INFO     | __main__:<module>:68 - Saved consolidated fingerprints 'removed_record_unique_fps.csv'
+2025-09-26 13:42:22.644 | INFO     | __main__:<module>:70 - Saved consolidated fingerprints 'industry_benchmark_v1.2_unique_fps.csv'

@@ -1,7 +1,34 @@
-Warning: [c:1]1([H:24])[c:2]([H:25])[c:5]([H:28])[c:12]2[c:11]([c:4]1[H:27])[c:7]([H:30])[c:8]([H:31])[c:15]1[c:13]2[C:10]([H:33])=[C:14](/[C:18](=[N:20]/[C:16]2=[C:6]([H:29])[C:3]([H:26])=[C:9]([H:32])[S:23]2)[O:21][H:35])/[C:17](=[N:19]/[H:34])[O:22]1
-Warning: Problem parsing SMILES:
-Warning: Inconsistent cis/trans bond stereo.
-Warning: [c:1]1([H:24])[c:2]([H:25])[c:5]([H:28])[c:12]2[c:11]([c:4]1[H:27])[c:7]([H:30])[c:8]([H:31])[c:15]1[c:13]2[C:10]([H:33])=[C:14](/[C:18](=[N:20]/[C:16]2=[C:6]([H:29])[C:3]([H:26])=[C:9]([H:32])[S:23]2)[O:21][H:35])/[C:17](=[N:19]/[H:34])[O:22]1
-2025-09-26 13:42:22.544 | INFO     | __main__:<module>:65 - Added Circular, MACCS, and LINGO fingerprints for each CMILES string.
-2025-09-26 13:42:22.550 | INFO     | __main__:<module>:68 - Saved consolidated fingerprints 'removed_record_unique_fps.csv'
-2025-09-26 13:42:22.644 | INFO     | __main__:<module>:70 - Saved consolidated fingerprints 'industry_benchmark_v1.2_unique_fps.csv'
+2025-09-27 08:41:32.635 | INFO     | __main__:<module>:35 - Pulled optimization dataset 'OpenFF Industry Benchmark Season 1 v1.1' from QCArvive
+2025-09-27 08:41:32.750 | INFO     | __main__:<module>:46 - There are 29 records that must be removed from Industry Benchmark v1.1 to make v1.2.
+2025-09-27 08:41:32.783 | INFO     | __main__:<module>:105 - Imported csv files
+2025-09-27 08:41:32.783 | INFO     | __main__:<module>:109 - Calculating distance matrices...
+2025-09-27 08:41:32.875 | INFO     | __main__:<module>:112 - Getting Circular fingerprints
+2025-09-27 08:41:34.865 | INFO     | __main__:<module>:115 - Getting Tanimoto similarity distances
+2025-09-27 08:41:34.865 | INFO     | __main__:<module>:125 - Imported 'outputs/distances_Tanimoto_Circular.txt'
+2025-09-27 08:42:18.524 | INFO     | __main__:<module>:115 - Getting Dice similarity distances
+2025-09-27 08:42:18.524 | INFO     | __main__:<module>:125 - Imported 'outputs/distances_Dice_Circular.txt'
+2025-09-27 08:43:01.136 | INFO     | __main__:<module>:115 - Getting Cosine similarity distances
+2025-09-27 08:43:01.136 | INFO     | __main__:<module>:125 - Imported 'outputs/distances_Cosine_Circular.txt'
+2025-09-27 08:43:44.397 | INFO     | __main__:<module>:112 - Getting MACCS fingerprints
+2025-09-27 08:43:46.278 | INFO     | __main__:<module>:115 - Getting Tanimoto similarity distances
+2025-09-27 08:43:46.278 | INFO     | __main__:<module>:125 - Imported 'outputs/distances_Tanimoto_MACCS.txt'
+2025-09-27 08:44:29.409 | INFO     | __main__:<module>:115 - Getting Dice similarity distances
+2025-09-27 08:44:29.409 | INFO     | __main__:<module>:125 - Imported 'outputs/distances_Dice_MACCS.txt'
+2025-09-27 08:45:13.078 | INFO     | __main__:<module>:115 - Getting Cosine similarity distances
+2025-09-27 08:45:13.078 | INFO     | __main__:<module>:125 - Imported 'outputs/distances_Cosine_MACCS.txt'
+2025-09-27 08:45:56.152 | INFO     | __main__:<module>:112 - Getting LINGO fingerprints
+2025-09-27 08:45:57.009 | INFO     | __main__:<module>:115 - Getting Tanimoto similarity distances
+2025-09-27 08:45:57.010 | INFO     | __main__:<module>:125 - Imported 'outputs/distances_Tanimoto_LINGO.txt'
+2025-09-27 08:46:39.430 | INFO     | __main__:<module>:115 - Getting Dice similarity distances
+2025-09-27 08:46:39.430 | INFO     | __main__:<module>:125 - Imported 'outputs/distances_Dice_LINGO.txt'
+2025-09-27 08:47:22.522 | INFO     | __main__:<module>:115 - Getting Cosine similarity distances
+2025-09-27 08:47:22.522 | INFO     | __main__:<module>:125 - Imported 'outputs/distances_Cosine_LINGO.txt'
+2025-09-27 08:48:08.507 | INFO     | __main__:<module>:164 - Saved 'outputs/removed_distance_Tanimoto_Circular.txt'
+2025-09-27 08:48:08.687 | INFO     | __main__:<module>:164 - Saved 'outputs/removed_distance_Dice_Circular.txt'
+2025-09-27 08:48:08.867 | INFO     | __main__:<module>:164 - Saved 'outputs/removed_distance_Cosine_Circular.txt'
+2025-09-27 08:48:10.843 | INFO     | __main__:<module>:164 - Saved 'outputs/removed_distance_Tanimoto_MACCS.txt'
+2025-09-27 08:48:10.945 | INFO     | __main__:<module>:164 - Saved 'outputs/removed_distance_Dice_MACCS.txt'
+2025-09-27 08:48:11.051 | INFO     | __main__:<module>:164 - Saved 'outputs/removed_distance_Cosine_MACCS.txt'
+2025-09-27 08:48:14.356 | INFO     | __main__:<module>:164 - Saved 'outputs/removed_distance_Tanimoto_LINGO.txt'
+2025-09-27 08:48:16.777 | INFO     | __main__:<module>:164 - Saved 'outputs/removed_distance_Dice_LINGO.txt'
+2025-09-27 08:48:19.194 | INFO     | __main__:<module>:164 - Saved 'outputs/removed_distance_Cosine_LINGO.txt'

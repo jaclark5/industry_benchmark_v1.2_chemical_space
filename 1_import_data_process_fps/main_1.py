@@ -1,30 +1,22 @@
-"""Create dataframes for the Industry Benchmark v1.2 and Discarded molecules from v1.1, output various distance
-matrixes.
+"""Create SDF files for the Industry Benchmark v1.2 and discarded molecules from v1.1 that contain:
 
-The major outputs of this module are in the outputs directory:
-
-- *.csv files
-    Containing unique CMILES and QCArchive entry names from the "OpenFF Industry Benchmark Season 1 v1.1"
-    for "OpenFF Industry Benchmark Season 1 v1.2" and removed entries.
-- distances_{Tanimoto | Dice | Cosine}_{Circular | MACCS | LINGO}.txt files
-    The first line contains the number of molecules and subsequent rows containing the upper triangle arrays for
-    "OpenFF Industry Benchmark Season 1 v1.2"
-- removed_distance_{Tanimoto | Dice | Cosine}_{Circular | MACCS | LINGO}.txt files
-    Each row contains the distance between that molecule and all molecules in the Industry Benchmark v1.2.
+- *: OE Molecule information
+- NAME: QCArchive entry name
+- CMILES: Canonical SMILES from QCArchive used to create the molecule
+- Circular: Circular molecule fingerprint
+- MACCS: MACCS molecule fingerprint
+- LINGO: LINGO molecule fingerprint
 
 """
 
-from urllib.request import urlopen
-from loguru import logger
 import os
+from urllib.request import urlopen
 
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-
+from loguru import logger
 from qcportal import PortalClient
 
-from fp_utilities import get_fps, get_distance_matrix, get_distance_vector
+from fp_utilities import get_mol_fps
+from openeye import oechem
 
 os.makedirs("outputs", exist_ok=True)
 
@@ -47,118 +39,49 @@ logger.info(
     f"There are {len(outlier_record_ids)} records that must be removed from Industry Benchmark v1.1 to make v1.2."
 )
 
-# Create dataframes for the cleaned Industry Dataset v1.2 and one for the removed entries:
-filename_indbench = "outputs/industry_benchmark_v1.2_unique.csv"
-filename_removed = "outputs/removed_records_unique.csv"
+# Create SDF for the cleaned Industry Dataset v1.2 and one for the removed entries:
+filename_indbench = "outputs/industry_benchmark_v1.2_unique_mols.sdf"
+filename_removed = "outputs/removed_records_unique_mols.sdf"
+
 if not os.path.isfile(filename_indbench) or not os.path.isfile(filename_removed):
-    removed_entries = []
-    final_entries = []
-    for entry_name, spec_name, rec in ds.iterate_records():
+    # Prepare output SDFs
+    ofs_indbench = oechem.oemolostream()
+    if not ofs_indbench.open(filename_indbench):
+        oechem.OEThrow.Fatal(f"Unable to open {filename_indbench} for writing")
+    count_indbench = 0
+
+    ofs_removed = oechem.oemolostream()
+    if not ofs_removed.open(filename_removed):
+        oechem.OEThrow.Fatal(f"Unable to open {filename_removed} for writing")
+    count_removed = 0
+
+    seen_cmiles = set()
+    for i, (entry_name, spec_name, rec) in enumerate(ds.iterate_records()):
+        if i % 1000 == 0:
+            logger.info(f"Ran {i} of {ds.record_count}")
         if spec_name != "default":
             continue
+        smiles = rec.initial_molecule.extras[
+            "canonical_isomeric_explicit_hydrogen_mapped_smiles"
+        ]
+        if smiles in seen_cmiles:
+            continue
+        else:
+            seen_cmiles.add(smiles)
+        mol = get_mol_fps(smiles)
+        oechem.OESetSDData(mol, "NAME", entry_name)
+        oechem.OESetSDData(mol, "CMILES", smiles)
+
         if rec.id in outlier_record_ids:
-            removed_entries.append(
-                {
-                    "Name": entry_name,
-                    "CMILES": rec.initial_molecule.extras[
-                        "canonical_isomeric_explicit_hydrogen_mapped_smiles"
-                    ],
-                }
-            )
+            oechem.OEWriteMolecule(ofs_removed, mol)
+            count_removed += 1
         else:
-            final_entries.append(
-                {
-                    "Name": entry_name,
-                    "CMILES": rec.initial_molecule.extras[
-                        "canonical_isomeric_explicit_hydrogen_mapped_smiles"
-                    ],
-                }
-            )
-    removed_df = pd.DataFrame(removed_entries)
-    final_df = pd.DataFrame(final_entries)
+            oechem.OEWriteMolecule(ofs_indbench, mol)
+            count_indbench += 1
 
     logger.info(
-        f"For conformers, there are {len(final_df)} in v1.2 and {len(removed_df)} removed."
+        f"For conformers, there are {count_indbench} in v1.2 and {count_removed} removed."
     )
 
-    # Consolidate rows with the same CMILES
-    removed_df = removed_df.groupby("CMILES", as_index=False).agg(
-        {"Name": lambda x: list(x)}
-    )
-    removed_df.rename(columns={"Name": "Names"}, inplace=True)
-
-    final_df = final_df.groupby("CMILES", as_index=False).agg(
-        {"Name": lambda x: list(x)}
-    )
-    final_df.rename(columns={"Name": "Names"}, inplace=True)
-    logger.info(
-        f"For unique molecules, there are {len(final_df)} in v1.2 and {len(removed_df)} removed."
-    )
-
-    removed_df.to_csv(filename_removed, index=False)
-    logger.info(f"Saved consolidated fingerprints '{filename_removed}'")
-    final_df.to_csv(filename_indbench, index=False)
-    logger.info(f"Saved consolidated fingerprints '{filename_indbench}'")
 else:
-    removed_df = pd.read_csv(filename_removed)
-    final_df = pd.read_csv(filename_indbench)
-    logger.info("Imported csv files")
-
-
-# Calculate distance matrices of final_molecules
-logger.info("Calculating distance matrices...")
-fig, axs = plt.subplots(1, 3, figsize=(8, 5), sharey=True)
-for j, fp_type in enumerate(["Circular", "MACCS", "LINGO"]):
-    logger.info(f"Getting {fp_type} fingerprints")
-    fps = get_fps(final_df["CMILES"].tolist(), fptype=fp_type)
-    for i, sim_type in enumerate(["Tanimoto", "Dice", "Cosine"]):
-        logger.info(f"Getting {sim_type} similarity distances")
-        filename = f"outputs/distances_{sim_type}_{fp_type}.txt"
-        if not os.path.isfile(filename):
-            distances = get_distance_matrix(fps, sim_type)  # dist_list, npts
-            logger.info(f"Saving 'outputs/distances_{sim_type}_{fp_type}.txt'")
-            with open(filename, "w") as f:
-                f.write(f"{distances[1]}\n")
-                for n in distances[0]:
-                    f.write(f"{n}\n")
-        else:
-            logger.info(f"Imported 'outputs/distances_{sim_type}_{fp_type}.txt'")
-            data = [
-                float(x.strip())
-                for x in open(filename).read().strip().split("\n")
-                if x != ""
-            ]
-            distances = (data[1:], int(data[0]))
-        # Plot similarity distribution
-        label = rf"{fp_type}: $\mu$ = {np.mean(distances[0]):0.2f} $\sigma$ = {np.std(distances[0]):0.2f}"
-        axs[i].hist(
-            distances[0],
-            density=True,
-            label=label,
-            alpha=0.6,
-            bins=30,
-            edgecolor="black",
-            linewidth=0.5,
-        )
-        if j == 0:
-            if i == 0:
-                axs[0].set_ylabel("Probability")
-            axs[i].set_xlabel(f"{sim_type} Distance")
-        axs[i].legend(loc="best")
-        axs[i].set_xlim((0, 1))
-
-plt.tight_layout()
-fig.savefig("outputs/distance_distributions.png", dpi=600)
-plt.close(fig)
-
-
-# Save distances of removed molecules from final molecules
-for fp_type in ["Circular", "MACCS", "LINGO"]:
-    fps = get_fps(removed_df["CMILES"].tolist(), fptype=fp_type)
-    fps_final = get_fps(final_df["CMILES"].tolist(), fptype=fp_type)
-    for i, sim_type in enumerate(["Tanimoto", "Dice", "Cosine"]):
-        rec_distances = [get_distance_vector(x, fps_final, sim_type) for x in fps]
-        open(f"outputs/removed_distance_{sim_type}_{fp_type}.txt", "w").write(
-            "\n".join([", ".join([str(y) for y in x]) for x in rec_distances])
-        )
-        logger.info(f"Saved 'outputs/removed_distance_{sim_type}_{fp_type}.txt'")
+    logger.info(f"Either {filename_indbench} and/or {filename_removed} already exists.")

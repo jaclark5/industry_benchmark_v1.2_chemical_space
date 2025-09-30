@@ -75,8 +75,8 @@ for i, file in enumerate(files):
     logger.info("Importing data...")
     dist_matrix = np.genfromtxt(file, delimiter=",").astype(np.float32)
     logger.info("Check k values...")
-    if not os.path.isfile(filename.replace(".png", "_kvalues.png")):
-        plot_k_distance(dist_matrix, filename.replace(".png", "_kvalues.png"))
+    if not os.path.isfile(filename.replace(".png", "_kvalues_elbow.png")):
+        plot_k_distance(dist_matrix, filename.replace(".png", "_kvalues_elbow.png"))
     logger.info("Running hyperparameter variations...")
     results = tune_hdbscan(dist_matrix, filename.split(".")[0] + ".txt", sparse=True)
     logger.info("Saving results...")

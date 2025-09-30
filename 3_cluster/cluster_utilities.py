@@ -80,7 +80,7 @@ def plot_k_distance(
     lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
     ax1.legend(lines, labels, loc="upper left")
     fig.tight_layout()
-    plt.savefig(filename.replace(".png", "_elbow.png"), dpi=600)
+    plt.savefig(filename, dpi=600)
     plt.close()
 
 
@@ -414,3 +414,16 @@ def plot_final_contenders(
     # Save plot
     plt.savefig(filename_plot, dpi=600)
     plt.close()
+
+    # Find rows not in filtered_df
+    excluded_df = df.loc[~df.index.isin(filtered_df.index)]
+
+    for _, row in excluded_df.iterrows():
+        sim_method = str(row["Similarity Method"]).strip()
+        fp_type = str(row["Fingerprint Type"]).strip()
+        min_cluster_size = str(row["Min Cluster Size"]).strip()
+        min_samples = str(row["Min Samples"]).strip()
+        plot_name = f"distances_{sim_method}_{fp_type}_{min_cluster_size}_{min_samples}_cluster_size_hist.png"
+        plot_path = os.path.join(os.path.dirname(filename_plot), plot_name)
+        if os.path.isfile(plot_path):
+            os.remove(plot_path)

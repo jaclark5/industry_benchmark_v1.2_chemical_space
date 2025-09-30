@@ -22,11 +22,12 @@ from loguru import logger
 import matplotlib.pyplot as plt
 import numpy as np
 
-from openeye import oechem
-from openeye import oegraphsim
-from openeye.oegraphsim import OEFingerPrint
 
-from distance_utilities import get_distance_matrix, get_distance_vector
+from distance_utilities import (
+    get_distance_matrix,
+    get_distance_vector,
+    get_fingerprints,
+)
 
 os.makedirs("outputs", exist_ok=True)
 
@@ -39,35 +40,9 @@ logger.info(
 )
 
 # SDF for the cleaned Industry Dataset v1.2 and one for the removed entries:
-filename_indbench = (
+fps_ib = get_fingerprints(
     "../1_import_data_process_fps/outputs/industry_benchmark_v1.2_unique_mols.sdf"
 )
-ifs_indbench = oechem.oemolistream()
-if not ifs_indbench.open(filename_indbench):
-    oechem.OEThrow.Fatal(f"Unable to open {filename_indbench} for reading")
-if ifs_indbench.GetFormat() != oechem.OEFormat_SDF:
-    oechem.OEThrow.Fatal(f"{filename_indbench} input file has to be an SDF file")
-logger.info(f"Connected to SDF {filename_indbench}")
-
-logger.info("Get Fingerprints")
-fps_ib: dict[str, list[OEFingerPrint]] = {x: [] for x in ["Circular", "MACCS", "Lingo"]}
-for mol in ifs_indbench.GetOEGraphMols():
-    for dp in oechem.OEGetSDDataPairs(mol):
-        if oegraphsim.OEIsValidFPTypeString(dp.GetTag()):
-            fptypestr = dp.GetTag()
-            fphexdata = dp.GetValue()
-            fp = oegraphsim.OEFingerPrint()
-            fptype = oegraphsim.OEGetFPType(fptypestr)
-            fp.SetFPTypeBase(fptype)
-            fp.FromHexString(fphexdata)
-
-            if "Circular" in fptypestr:
-                fps_ib["Circular"].append(fp)
-            elif "MACCS" in fptypestr:
-                fps_ib["MACCS"].append(fp)
-            elif "Lingo" in fptypestr:
-                fps_ib["Lingo"].append(fp)
-logger.info("Imported fingerprints, Circular, MACCS, and Lingo")
 
 fig, axs = plt.subplots(1, 3, figsize=(8, 5), sharey=True)
 similarity_stats = []
@@ -137,33 +112,10 @@ logger.info(
     "________________ Get Distances between Removed Molecules with those in Industry Benchmark v1.2 ________________"
 )
 
-filename_removed = (
+
+fps_removed = get_fingerprints(
     "../1_import_data_process_fps/outputs/removed_records_unique_mols.sdf"
 )
-ifs_removed = oechem.oemolistream()
-if not ifs_removed.open(filename_removed):
-    oechem.OEThrow.Fatal(f"Unable to open {filename_removed} for reading")
-if ifs_removed.GetFormat() != oechem.OEFormat_SDF:
-    oechem.OEThrow.Fatal(f"{filename_removed} input file has to be an SDF file")
-logger.info(f"Connected to SDF {filename_removed}")
-
-fps_removed: dict[str, list[OEFingerPrint]] = {"Circular": [], "MACCS": [], "Lingo": []}
-for mol in ifs_removed.GetOEGraphMols():
-    for dp in oechem.OEGetSDDataPairs(mol):
-        if oegraphsim.OEIsValidFPTypeString(dp.GetTag()):
-            fptypestr = dp.GetTag()
-            fphexdata = dp.GetValue()
-            fp = oegraphsim.OEFingerPrint()
-            fptype = oegraphsim.OEGetFPType(fptypestr)
-            fp.SetFPTypeBase(fptype)
-            fp.FromHexString(fphexdata)
-
-            if "Circular" in fptypestr:
-                fps_removed["Circular"].append(fp)
-            elif "MACCS" in fptypestr:
-                fps_removed["MACCS"].append(fp)
-            elif "Lingo" in fptypestr:
-                fps_removed["Lingo"].append(fp)
 
 for fp_type in ["Circular", "MACCS", "Lingo"]:
     for i, sim_type in enumerate(["Tanimoto", "Dice", "Cosine"]):

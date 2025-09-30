@@ -1,12 +1,60 @@
 """Support functions to calculate molecular fingerprints using OpenEye Toolkits"""
 
 import numpy as np
+from loguru import logger
+
 from openeye import oechem
 from openeye import oegraphsim
 from openeye.oegraphsim import OEFingerPrint
 
 # Suppress OpenEye warnings
 oechem.OEThrow.SetLevel(oechem.OEErrorLevel_Error)
+
+
+def get_fingerprints(
+    filename: str, fp_types: list[str] = ["Circular", "MACCS", "Lingo"]
+) -> dict[str, list[OEFingerPrint]]:
+    """
+    Extract molecular fingerprints from an SDF file using OpenEye Toolkits.
+
+    Parameters
+    ----------
+    filename : str
+        Path to the SDF file containing molecules and fingerprint data.
+    fp_types : list[str], optional
+        List of fingerprint types to extract (default: ["Circular", "MACCS", "Lingo"]).
+
+    Returns
+    -------
+    dict[str, list[OEFingerPrint]]
+        Dictionary mapping fingerprint type to list of OEFingerPrint objects.
+    """
+
+    ifs = oechem.oemolistream()
+    if not ifs.open(filename):
+        oechem.OEThrow.Fatal(f"Unable to open {filename} for reading")
+    if ifs.GetFormat() != oechem.OEFormat_SDF:
+        oechem.OEThrow.Fatal(f"{filename} input file has to be an SDF file")
+    logger.info(f"Connected to SDF {filename}")
+
+    logger.info("Get Fingerprints")
+    fps: dict[str, list[OEFingerPrint]] = {x: [] for x in fp_types}
+    for mol in ifs.GetOEGraphMols():
+        for dp in oechem.OEGetSDDataPairs(mol):
+            if oegraphsim.OEIsValidFPTypeString(dp.GetTag()):
+                fptypestr = dp.GetTag()
+                fphexdata = dp.GetValue()
+                fp = oegraphsim.OEFingerPrint()
+                fptype = oegraphsim.OEGetFPType(fptypestr)
+                fp.SetFPTypeBase(fptype)
+                fp.FromHexString(fphexdata)
+
+                for fp_type in fp_types:
+                    if fp_type in fptypestr:
+                        fps[fp_type].append(fp)
+
+    logger.info(f"Imported fingerprints, {', '.join(fp_types)}")
+    return fps
 
 
 def get_distance_upper_triangle(

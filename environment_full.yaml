@@ -42,6 +42,7 @@ dependencies:
   - identify=2.6.14=pyhd8ed1ab_0
   - idna=3.10=pyhd8ed1ab_1
   - iniconfig=2.0.0=pyhd8ed1ab_1
+  - joblib=1.5.2=pyhd8ed1ab_0
   - kiwisolver=1.4.9=py311h63e5c0c_1
   - krb5=1.21.3=h237132a_0
   - lcms2=2.17=h7eeda09_0
@@ -95,6 +96,7 @@ dependencies:
   - packaging=25.0=pyh29332c3_1
   - pandas=2.3.2=py311hff7e5bb_0
   - pathspec=0.12.1=pyhd8ed1ab_1
+  - patsy=1.0.1=pyhd8ed1ab_1
   - pcre2=10.46=h7125dd6_0
   - pillow=11.3.0=py311h1f9957d_3
   - pint=0.25=pyhe01879c_0
@@ -129,10 +131,16 @@ dependencies:
   - requests=2.32.5=pyhd8ed1ab_0
   - rlpycairo=0.4.0=pyh6c17108_0
   - ruff=0.13.2=h492a034_0
+  - scikit-learn=1.7.2=py311h0f965f6_0
+  - scipy=1.16.2=py311h2734c94_0
+  - seaborn=0.13.2=hd8ed1ab_3
+  - seaborn-base=0.13.2=pyhd8ed1ab_3
   - setuptools=80.9.0=pyhff2d567_0
   - six=1.17.0=pyhe01879c_1
   - sqlalchemy=2.0.43=py311h3696347_0
+  - statsmodels=0.14.5=py311h9dc9093_0
   - tabulate=0.9.0=pyhd8ed1ab_2
+  - threadpoolctl=3.6.0=pyhecae5ae_0
   - tk=8.6.13=h892fb3f_2
   - tomli=2.2.1=pyhe01879c_2
   - tqdm=4.67.1=pyhd8ed1ab_1

@@ -12,9 +12,7 @@ __pycache__/
 api.qcarchive.molssi*
 *cache
 *.DS_Store
-*.arrow
-*.hdf5
-*pkl
+*.txt
 
 # Distribution / packaging
 .Python

@@ -14,8 +14,6 @@ from loguru import logger
 from sklearn.cluster import HDBSCAN
 from sklearn.neighbors import NearestNeighbors
 
-from rdkit.ML.Cluster import Butina
-
 
 def plot_k_distance(
     X: np.ndarray, filename: str, ks: list[int] = list(range(2, 51))
@@ -82,33 +80,6 @@ def plot_k_distance(
     fig.tight_layout()
     plt.savefig(filename, dpi=600)
     plt.close()
-
-
-def run_butina(
-    dist_matrix: list[float], npts: int, threshold: float = 0.6
-) -> list[list[int]]:
-    """
-    Cluster using RDKit's Butina algorithm given a flattened distance matrix.
-
-    Parameters
-    ----------
-    dist_matrix : list[float]
-        Flattened distance matrix between chemicals.
-    npts : int
-        Number of points (fingerprints) in the input list.
-    threshold : float, optional
-        Distance threshold for cluster inclusion. Default is 0.6.
-
-    Returns
-    -------
-    list[list[int]]
-        List of clusters, where each cluster is a list of indices.
-    """
-    clusters = Butina.ClusterData(
-        data=dist_matrix, nPts=npts, distThresh=threshold, isDistData=True
-    )
-    clusters = sorted(clusters, key=len, reverse=True)
-    return clusters
 
 
 def build_mutual_knn_sparse(dist_mat: np.ndarray, k: int = 500) -> csr_matrix:

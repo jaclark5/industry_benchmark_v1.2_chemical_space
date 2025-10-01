@@ -1,6 +1,8 @@
 """Support functions to calculate molecular fingerprints using OpenEye Toolkits"""
 
 import numpy as np
+from loguru import logger
+
 from openeye import oechem
 from openeye import oegraphsim
 from openeye.oegraphsim import OEFingerPrint
@@ -9,48 +11,50 @@ from openeye.oegraphsim import OEFingerPrint
 oechem.OEThrow.SetLevel(oechem.OEErrorLevel_Error)
 
 
-def get_distance_upper_triangle(
-    fps: list[OEFingerPrint], metric: str = "Tanimoto"
-) -> tuple[list[float], int]:
+def get_fingerprints(
+    filename: str, fp_types: list[str] = ["Circular", "MACCS", "Lingo"]
+) -> dict[str, list[OEFingerPrint]]:
     """
-    Generate a distance matrix (1 - similarity) for a list of fingerprints using the specified similarity metric.
+    Extract molecular fingerprints from an SDF file using OpenEye Toolkits.
 
     Parameters
     ----------
-    fps : list[OEFingerPrint]
-        List of OpenEye fingerprints.
-    metric : str, optional
-        Similarity metric to use. Defaults to "Tanimoto".
+    filename : str
+        Path to the SDF file containing molecules and fingerprint data.
+    fp_types : list[str], optional
+        List of fingerprint types to extract (default: ["Circular", "MACCS", "Lingo"]).
 
     Returns
     -------
-    tuple[list[float], int]
-        A tuple containing:
-        - The upper triangle distance matrix where the distance is ``1 - similarity``.
-        - The number of points (fingerprints) in the input list.
-
-    Raises
-    ------
-    ValueError
-        If an unsupported metric is provided.
+    dict[str, list[OEFingerPrint]]
+        Dictionary mapping fingerprint type to list of OEFingerPrint objects.
     """
-    metric_dict = {
-        "Tanimoto": oegraphsim.OETanimoto,
-        "Dice": oegraphsim.OEDice,
-        "Cosine": oegraphsim.OECosine,
-    }
-    if metric not in metric_dict:
-        raise ValueError(
-            f"Unsupported metric '{metric}'. Choose from {list(metric_dict.keys())}."
-        )
 
-    n = len(fps)
-    distance_data = []
-    for i in range(n):
-        for j in range(i):
-            sim = metric_dict[metric](fps[i], fps[j])
-            distance_data.append(1 - sim)
-    return distance_data, n
+    ifs = oechem.oemolistream()
+    if not ifs.open(filename):
+        oechem.OEThrow.Fatal(f"Unable to open {filename} for reading")
+    if ifs.GetFormat() != oechem.OEFormat_SDF:
+        oechem.OEThrow.Fatal(f"{filename} input file has to be an SDF file")
+    logger.info(f"Connected to SDF {filename}")
+
+    logger.info("Get Fingerprints")
+    fps: dict[str, list[OEFingerPrint]] = {x: [] for x in fp_types}
+    for mol in ifs.GetOEGraphMols():
+        for dp in oechem.OEGetSDDataPairs(mol):
+            if oegraphsim.OEIsValidFPTypeString(dp.GetTag()):
+                fptypestr = dp.GetTag()
+                fphexdata = dp.GetValue()
+                fp = oegraphsim.OEFingerPrint()
+                fptype = oegraphsim.OEGetFPType(fptypestr)
+                fp.SetFPTypeBase(fptype)
+                fp.FromHexString(fphexdata)
+
+                for fp_type in fp_types:
+                    if fp_type in fptypestr:
+                        fps[fp_type].append(fp)
+
+    logger.info(f"Imported fingerprints, {', '.join(fp_types)}")
+    return fps
 
 
 def get_distance_matrix(

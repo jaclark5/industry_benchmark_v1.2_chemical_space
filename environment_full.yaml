@@ -13,12 +13,15 @@ dependencies:
   - cairo=1.18.4=h6a3b0d2_0
   - certifi=2025.8.3=pyhd8ed1ab_0
   - cffi=2.0.0=py311hcfc1310_0
+  - cfgv=3.3.1=pyhd8ed1ab_1
   - charset-normalizer=3.4.3=pyhd8ed1ab_0
   - colorama=0.4.6=pyhd8ed1ab_1
   - contourpy=1.3.3=py311h57a9ea7_2
   - cycler=0.12.1=pyhd8ed1ab_1
   - cyrus-sasl=2.1.28=ha1cbb27_0
+  - distlib=0.4.0=pyhd8ed1ab_0
   - exceptiongroup=1.3.0=pyhd8ed1ab_0
+  - filelock=3.19.1=pyhd8ed1ab_0
   - flexcache=0.3=pyhd8ed1ab_1
   - flexparser=0.4=pyhd8ed1ab_1
   - font-ttf-dejavu-sans-mono=2.37=hab24e00_0
@@ -36,6 +39,7 @@ dependencies:
   - hpack=4.1.0=pyhd8ed1ab_0
   - hyperframe=6.1.0=pyhd8ed1ab_0
   - icu=75.1=hfee45f7_0
+  - identify=2.6.14=pyhd8ed1ab_0
   - idna=3.10=pyhd8ed1ab_1
   - iniconfig=2.0.0=pyhd8ed1ab_1
   - kiwisolver=1.4.9=py311h63e5c0c_1
@@ -75,10 +79,14 @@ dependencies:
   - libxcb=1.17.0=hdb1d25a_0
   - libzlib=1.3.1=h8359307_2
   - llvm-openmp=21.1.0=hbb9b287_0
+  - loguru=0.7.3=pyh707e725_0
   - matplotlib-base=3.10.6=py311h66dac5a_0
   - msgpack-python=1.1.1=py311h57a9ea7_1
   - munkres=1.1.4=pyhd8ed1ab_1
+  - mypy=1.18.2=py311h9408147_0
+  - mypy_extensions=1.1.0=pyha770c72_0
   - ncurses=6.5=h5e97a16_3
+  - nodeenv=1.9.1=pyhd8ed1ab_1
   - numpy=2.3.3=py311h8685306_0
   - openeye-toolkits=2025.1.1=py311_0
   - openjpeg=2.5.4=hbfb3c88_0
@@ -86,6 +94,7 @@ dependencies:
   - openssl=3.5.3=h5503f6c_1
   - packaging=25.0=pyh29332c3_1
   - pandas=2.3.2=py311hff7e5bb_0
+  - pathspec=0.12.1=pyhd8ed1ab_1
   - pcre2=10.46=h7125dd6_0
   - pillow=11.3.0=py311h1f9957d_3
   - pint=0.25=pyhe01879c_0
@@ -93,6 +102,8 @@ dependencies:
   - pixman=0.46.4=h81086ad_1
   - platformdirs=4.4.0=pyhcf101f3_0
   - pluggy=1.6.0=pyhd8ed1ab_0
+  - pre-commit=4.3.0=pyha770c72_0
+  - psutil=7.1.0=py311h9408147_0
   - pthread-stubs=0.4=hd74edd7_1002
   - pycairo=1.28.0=py311h3b85a94_1
   - pycparser=2.22=pyh29332c3_1
@@ -117,6 +128,7 @@ dependencies:
   - reportlab=4.4.4=py311h9408147_0
   - requests=2.32.5=pyhd8ed1ab_0
   - rlpycairo=0.4.0=pyh6c17108_0
+  - ruff=0.13.2=h492a034_0
   - setuptools=80.9.0=pyhff2d567_0
   - six=1.17.0=pyhe01879c_1
   - sqlalchemy=2.0.43=py311h3696347_0
@@ -128,13 +140,17 @@ dependencies:
   - typing-inspection=0.4.1=pyhd8ed1ab_0
   - typing_extensions=4.15.0=pyhcf101f3_0
   - tzdata=2025b=h78e105d_0
+  - ukkonen=1.0.1=py311h2c37856_5
   - unicodedata2=16.0.0=py311h3696347_1
   - urllib3=2.5.0=pyhd8ed1ab_0
+  - virtualenv=20.34.0=pyhd8ed1ab_0
   - wheel=0.45.1=pyhd8ed1ab_1
   - xorg-libxau=1.0.12=h5505292_0
   - xorg-libxdmcp=1.1.5=hd74edd7_0
   - yaml=0.2.5=h925e9cb_3
   - zstandard=0.25.0=py311h5bb9006_0
   - zstd=1.5.7=h6491c7d_2
+  - pip:
+    - types-requests==2.32.4.20250913
 
 prefix: "/Users/jenniferclark/mamba/envs/ibcs"

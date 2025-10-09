@@ -1,0 +1,79 @@
+{
+  "[O:1]=[C:2]([C:3]1([H:28])[C:4]([H:29])([H:30])[C:5]([H:31])([H:32])[O:6][C:7]([H:33])([H:34])[C:8]1([H:35])[H:36])[N:9]1[C:10]([H:37])([H:38])[C:11]([H:39])([H:40])[C:12]([H:41])([H:42])[N:13]([C:16]2=[N:17][C:18]([H:47])=[C:19]([C:20]([N:21]3[C:22]([H:50])([H:51])[C:23]([H:52])([H:53])[O:24][C:25]([H:54])([H:55])[C:26]3([H:56])[H:57])([H:48])[H:49])[S:27]2)[C:14]([H:43])([H:44])[C:15]1([H:45])[H:46]": {
+    "Ether": 2,
+    "Dialkylether": 2,
+    "Amine": 2,
+    "Tertiary Amine": 2,
+    "Tertiary Aliphatic Amine": 1,
+    "Tertiary Mixed Amine": 1,
+    "Carboxylic Acid Derivative": 1,
+    "Carboxylic Acid Amide": 1,
+    "Carboxylic Acid Tertiary Amide": 1,
+    "Aromatic": 1,
+    "Heterocycle": 4
+  },
+  "[O:1]=[C:2]1[O:3][C@:4]([H:5])([c:22]2[c:23]([H:43])[c:24]([H:44])[c:25]([H:45])[c:26]([H:46])[c:27]2[H:47])[C@:6]([H:7])([c:16]2[c:17]([H:38])[c:18]([H:39])[c:19]([H:40])[c:20]([H:41])[c:21]2[H:42])[N:8]2[C:9]([H:28])([H:29])[C:10]([H:30])([H:31])[C:11]([H:32])([H:33])[C:12]([H:34])([H:35])[C:13]([H:36])([H:37])[C@@:14]12[H:15]": {
+    "Amine": 1,
+    "Tertiary Amine": 1,
+    "Tertiary Aliphatic Amine": 1,
+    "Carboxylic Acid Derivative": 1,
+    "Carboxylic Acid Ester": 1,
+    "Lactone": 1,
+    "Aromatic": 2,
+    "Heterocycle": 2
+  },
+  "[C:1]([O:2][c:3]1[c:4]([N:15]2[C:16]([H:36])([H:37])[C:17]([H:38])([H:39])[C:18]([H:40])([H:41])[N:19]([H:42])[C:20]([H:43])([H:44])[C:21]2([H:45])[H:46])[n:5][c:6]([N:7]([H:25])[H:26])[n:8][c:9]1[C:10]1([H:27])[C:11]([H:28])([H:29])[C:12]([H:30])([H:31])[C:13]([H:32])([H:33])[C:14]1([H:34])[H:35])([H:22])([H:23])[H:24]": {
+    "Ether": 1,
+    "Alkylarylether": 1,
+    "Amine": 3,
+    "Primary Amine": 1,
+    "Primary Aromatic Amine": 1,
+    "Secondary Amine": 1,
+    "Secondary Aliphatic Amine": 1,
+    "Tertiary Amine": 1,
+    "Tertiary Mixed Amine": 1,
+    "Aromatic": 1,
+    "Heterocycle": 2
+  },
+  "[C:1]([N:2]1[C:3]([H:36])([H:37])[C:4]([c:10]2[c:11]([H:44])[c:12]([H:45])[c:13]([N:14]([C:15](=[O:16])[C:17]3=[N:18][C:19]([C:22]#[N:23])=[C:20]([H:47])[N:21]3[H:48])[H:46])[c:24]([C:26]3=[C:27]([H:50])[C:28]([H:51])([H:52])[C:29]([H:53])([H:54])[C:30]([H:55])([H:56])[C:31]([H:57])([H:58])[C:32]3([H:59])[H:60])[c:25]2[H:49])([H:38])[C:5]([H:39])([H:40])[N:6]([C:7]([H:41])([H:42])[H:43])[C:8]1=[O:9])([H:33])([H:34])[H:35]": {
+    "Carboxylic Acid Derivative": 1,
+    "Carboxylic Acid Amide": 1,
+    "Carboxylic Acid Secondary Amide": 1,
+    "Nitrile": 1,
+    "Urea": 1,
+    "Alkene": 1,
+    "Aromatic": 2,
+    "Heterocycle": 2
+  },
+  "[C:1]([C:2]([c:3]1[c:4]([N:5]2[C:6]([H:32])([H:33])[C:7]([H:34])([H:35])[C:8]([H:36])([H:37])[N:9]([C:12](=[O:13])[N:14]([c:15]3[c:16]([H:43])[c:17]([H:44])[c:18]([H:45])[c:19]([Cl:20])[c:21]3[H:46])[H:42])[C:10]([H:38])([H:39])[C:11]2([H:40])[H:41])[c:22]([Cl:23])[c:24]([H:47])[n:25][c:26]1[H:48])([H:30])[H:31])([H:27])([H:28])[H:29]": {
+    "Amine": 1,
+    "Tertiary Amine": 1,
+    "Tertiary Mixed Amine": 1,
+    "Halogen Derivative": 2,
+    "Aryl Chloride": 2,
+    "Urea": 1,
+    "Aromatic": 2,
+    "Heterocycle": 2
+  },
+  "[F:1][C:2]1([H:27])[C:3]([H:28])([H:29])[C:4]([H:30])([H:31])[N:5]([c:8]2[n:9][c:10]3[c:11]([c:17](-[c:19]4[c:20]([H:45])[c:21]([H:46])[c:22]([Cl:23])[c:24]([Cl:25])[c:26]4[H:47])[n:18]2)[C:12]([H:36])([H:37])[C:13]([H:38])([H:39])[N:14]([H:40])[C:15]([H:41])([H:42])[C:16]3([H:43])[H:44])[C:6]([H:32])([H:33])[C:7]1([H:34])[H:35]": {
+    "Amine": 2,
+    "Secondary Amine": 1,
+    "Secondary Aliphatic Amine": 1,
+    "Tertiary Amine": 1,
+    "Tertiary Mixed Amine": 1,
+    "Halogen Derivative": 3,
+    "Alkyl Fluoride": 1,
+    "Aryl Chloride": 2,
+    "Aromatic": 2,
+    "Heterocycle": 3
+  },
+  "[C:1]([N:2]1[N:3]=[C:4]2[C:5]([H:22])([H:23])[C:6]([H:24])([H:25])[N:7]([H:26])[C:8]([H:27])([H:28])[C:9]([H:29])([H:30])[C:10]2=[C:11]1[c:12]1[c:13]([H:31])[c:14]([H:32])[c:15]([Cl:16])[c:17]([H:33])[c:18]1[H:34])([H:19])([H:20])[H:21]": {
+    "Amine": 1,
+    "Secondary Amine": 1,
+    "Secondary Aliphatic Amine": 1,
+    "Halogen Derivative": 1,
+    "Aryl Chloride": 1,
+    "Aromatic": 2,
+    "Heterocycle": 2
+  }
+}

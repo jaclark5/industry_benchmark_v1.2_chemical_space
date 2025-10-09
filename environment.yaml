@@ -12,9 +12,15 @@ dependencies:
   - rdkit
   - openeye-toolkits
   - scikit-learn
+  - openff-interchange =0.4
+  - openff-qcsubmit
+  - openmmforcefields
 
   # Dev
   - pre-commit
   - loguru
   - ruff
   - mypy
+
+  - pip:
+    - git+https://github.com/openforcefield/yammbs.git

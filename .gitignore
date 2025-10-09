@@ -13,6 +13,7 @@ api.qcarchive.molssi*
 *cache
 *.DS_Store
 *.txt
+*.pdf
 
 # Distribution / packaging
 .Python

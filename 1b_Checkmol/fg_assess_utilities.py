@@ -85,11 +85,11 @@ def get_functional_group_counts(smiles: str) -> dict[str, int]:
     return groups_and_counts
 
 
-def get_histogram(
+def get_occurrence_counts(
     fg_breakdown: dict[str, dict[str, int]], filename: str, cutoff: int = 0
 ) -> tuple[np.ndarray, list[str]]:
     """
-    Generate a 2D histogram of functional group co-occurrences.
+    Count how many molecules contain each functional group and plot the result as a bar chart.
 
     Parameters
     ----------
@@ -97,16 +97,18 @@ def get_histogram(
         A dictionary where keys are molecule identifiers and values are dictionaries
         of functional group counts.
     filename : str
-        The filename to save the histogram image.
+        The filename to save the bar chart image.
     cutoff : int, optional
-        If all values in a row/column have less than this number, then the row/column is removed. Default is 0.
+        Functional groups present in fewer than this many molecules are excluded. Default is 0.
 
     Returns
     -------
-    cooccurrence_matrix : np.ndarray
-        A 2D numpy array representing the co-occurrence matrix of functional groups.
+    occurrence_counts : np.ndarray
+        A 1D array of per-molecule occurrence counts for each functional group, sorted
+        in descending order.
     all_groups : list[str]
-        A list of all unique functional groups in the dataset.
+        Functional group labels corresponding to each entry in ``occurrence_counts``,
+        in the same sorted order.
     """
     # Get all unique functional groups
     tmp_all_groups: set[str] = set()

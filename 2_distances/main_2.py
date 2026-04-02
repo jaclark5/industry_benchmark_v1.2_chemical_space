@@ -120,10 +120,11 @@ fps_removed = get_fingerprints(
 for fp_type in ["Circular", "MACCS", "Lingo"]:
     for i, sim_type in enumerate(["Tanimoto", "Dice", "Cosine"]):
         filename = f"outputs/removed_distance_{sim_type}_{fp_type}.txt"
-        open(filename, "w").write(
-            "#distances for each removed molecule with respect to industry benchmark v1.2\n"
-        )
-        for fp in fps_removed[fp_type]:
-            rec_distances = get_distance_vector(fp, fps_ib[fp_type], sim_type)
-            open(filename, "a").write(", ".join([str(y) for y in rec_distances]) + "\n")
+        with open(filename, "w") as f:
+            f.write(
+                "#distances for each removed molecule with respect to industry benchmark v1.2\n"
+            )
+            for fp in fps_removed[fp_type]:
+                rec_distances = get_distance_vector(fp, fps_ib[fp_type], sim_type)
+                f.write(", ".join([str(y) for y in rec_distances]) + "\n")
         logger.info(f"Saved 'outputs/removed_distance_{sim_type}_{fp_type}.txt'")

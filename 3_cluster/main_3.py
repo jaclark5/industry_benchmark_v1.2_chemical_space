@@ -13,20 +13,21 @@ The major outputs of this module are:
     Cluster labels resulting from HDBSCAN hyperparameters
 - outputs/distances_{Tanimoto | Dice | Cosine}_{Circular | MACCS | LINGO}.png
     Heatmap of Number of Clusters and Noise Fraction plotted on axes min_samples and min_cluster_size
-- outputs/summary.py
+- outputs/summary.csv
     CSV containing a summary of clustering performance given a fingerprint type, similarity method, min_cluster_size, or min_samples,
     reporting the number of clusters and noise fraction.
 
 Outputs for a sparse matrix of each distance matrix with a KNN k=500
 - outputs_sparse/distances_{Tanimoto | Dice | Cosine}_{Circular | MACCS | LINGO}_kvalues_elbow.png
-    Plot of inertia and distortion for k-values of distance matrix
+    k-distance plot: sorted k-th nearest-neighbor distances for a range of k values;
+    the elbow in each curve indicates the natural kNN distance threshold for sparsification
 - outputs_sparse/distances_{Tanimoto | Dice | Cosine}_{Circular | MACCS | LINGO}_{min_cluster_size}_{min_samples}_cluster_size_hist.png
     Cluster sizes resulting from HDBSCAN hyperparameters
 - outputs_sparse/distances_{Tanimoto | Dice | Cosine}_{Circular | MACCS | LINGO}_{min_cluster_size}_{min_samples}.txt
     Cluster labels resulting from HDBSCAN hyperparameters
 - outputs_sparse/distances_{Tanimoto | Dice | Cosine}_{Circular | MACCS | LINGO}.png
     Heatmap of Number of Clusters and Noise Fraction plotted on axes min_samples and min_cluster_size
-- outputs_sparse/summary.py
+- outputs_sparse/summary.csv
     CSV containing a summary of clustering performance given a fingerprint type, similarity method, min_cluster_size, or min_samples,
     reporting the number of clusters and noise fraction.
 

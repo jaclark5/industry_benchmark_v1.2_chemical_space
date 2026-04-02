@@ -1,4 +1,22 @@
-"""Supporting functions for clustering fingerprints using similarity analysis"""
+"""Supporting functions for clustering fingerprints using similarity analysis
+
+Key functions
+-------------
+plot_k_distance
+    Plots sorted k-th nearest-neighbor distance curves (k-distance plot) for a
+    range of k values using the precomputed distance matrix. The elbow in each
+    curve is used to select the kNN threshold for sparsification.
+build_mutual_knn_sparse
+    Sparsifies a full distance matrix to a symmetric kNN graph (union of both
+    kNN directions) suitable for use as a precomputed input to HDBSCAN.
+run_hdbscan
+    Runs HDBSCAN on a full or sparse precomputed distance matrix.
+tune_hdbscan
+    Grid-searches min_cluster_size × min_samples, saves label files and
+    cluster-size histograms for each combination.
+save_results / plot_results / plot_final_contenders
+    Persist and visualise the hyperparameter-sweep results.
+"""
 
 import os
 
@@ -7,8 +25,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.sparse import csr_matrix
 import seaborn as sns
-from sklearn.cluster import KMeans
-from scipy.spatial.distance import cdist
 
 from loguru import logger
 from sklearn.cluster import HDBSCAN
@@ -19,7 +35,12 @@ def plot_k_distance(
     X: np.ndarray, filename: str, ks: list[int] = list(range(2, 51))
 ) -> None:
     """
-    Plot distortion and inertia metrics for a range of k values using the elbow method, and save the plot to a file.
+    Plot k-distance curves for a range of k values and save the plot to a file.
+
+    For each k, the k-th nearest-neighbor distance is computed for every sample
+    using the precomputed distance matrix, sorted in descending order, and plotted.
+    The "elbow" in these curves indicates a natural distance threshold for choosing
+    k in the kNN sparsification step before HDBSCAN.
 
     Parameters
     ----------
@@ -28,55 +49,24 @@ def plot_k_distance(
     filename : str
         Path to save the generated plot (PNG format).
     ks : list[int], optional
-        List of k values (number of clusters) to evaluate. Defaults to range(2, 51).
+        List of k values to evaluate. Defaults to range(2, 51).
 
     Returns
     -------
     None
     """
-    distortions = []
-    inertias = []
+    fig, ax = plt.subplots(figsize=(8, 5))
+
     for k in ks:
-        kmeanModel = KMeans(n_clusters=k, random_state=42).fit(X)
+        nbrs = NearestNeighbors(n_neighbors=k, metric="precomputed").fit(X)
+        distances, _ = nbrs.kneighbors(X)
+        kth_distances = np.sort(distances[:, -1])[::-1]
+        ax.plot(kth_distances, label=f"k={k}", linewidth=0.8)
 
-        distortions.append(
-            sum(np.min(cdist(X, kmeanModel.cluster_centers_, "euclidean"), axis=1) ** 2)
-            / X.shape[0]
-        )
-        inertias.append(kmeanModel.inertia_)
-
-    fig, ax1 = plt.subplots(figsize=(8, 5))
-
-    color1 = "tab:blue"
-    ax1.set_xlabel("k")
-    ax1.set_ylabel("Distortion", color=color1)
-    ax1.plot(ks, distortions, marker="o", color=color1, label="Distortion")
-    ax1.tick_params(axis="y", labelcolor=color1)
-
-    ax2 = ax1.twinx()
-    color2 = "tab:orange"
-    ax2.set_ylabel("Inertia", color=color2)
-    ax2.plot(ks, inertias, marker="s", color=color2, linestyle="--", label="Inertia")
-    ax2.tick_params(axis="y", labelcolor=color2)
-
-    plt.title("Elbow Method: Distortion & Inertia vs k")
-
-    # Elbow detection (simple heuristic: max second derivative for inertia)
-    inertia_diff2 = np.diff(inertias, 2)
-    if len(inertia_diff2) > 0:
-        elbow_idx = np.argmin(inertia_diff2) + 1  # one index after the max
-        ax2.axvline(
-            ks[elbow_idx],
-            color="r",
-            linestyle="--",
-            label=f"Elbow at k={ks[elbow_idx]}",
-        )
-
-    lines_labels = [ax.get_legend_handles_labels() for ax in [ax1, ax2]]
-    lines: list = []
-    labels: list = []
-    lines, labels = [sum(lol, []) for lol in zip(*lines_labels)]
-    ax1.legend(lines, labels, loc="upper left")
+    ax.set_xlabel("Points sorted by decreasing k-distance")
+    ax.set_ylabel("Distance to k-th nearest neighbor")
+    ax.set_title("k-Distance Plot (elbow indicates kNN threshold)")
+    ax.legend(fontsize=6, ncol=5, loc="upper right")
     fig.tight_layout()
     plt.savefig(filename, dpi=600)
     plt.close()
@@ -100,8 +90,7 @@ def build_mutual_knn_sparse(dist_mat: np.ndarray, k: int = 500) -> csr_matrix:
     """
     nbrs = NearestNeighbors(n_neighbors=k, metric="precomputed").fit(dist_mat)
     knn_graph = nbrs.kneighbors_graph(dist_mat, mode="distance")
-    # Make mutual: keep edges where both directions exist
-    # Make symmetric: ensure each point has at least k neighbors (if edge exists in either direction, include it)
+    # Make symmetric: keep an edge if it exists in either direction (union / symmetric kNN)
     mutual = knn_graph.maximum(knn_graph.transpose())
     # Ensure diagonal is zero
     mutual.setdiag(0)

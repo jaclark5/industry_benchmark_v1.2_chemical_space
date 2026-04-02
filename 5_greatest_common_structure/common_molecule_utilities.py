@@ -5,6 +5,26 @@ from openeye import oedepict
 from getcore import GetCoreFragment
 
 
+def get_cluster_labels(filename: str) -> list[int]:
+    """
+    Retrieve cluster labels from a file.
+
+    Parameters
+    ----------
+    filename : str
+        Path to the file containing cluster labels.
+
+    Returns
+    -------
+    list[int]
+        List of cluster labels.
+    """
+    with open(filename, "r") as f:
+        labels = [int(line.strip()) for line in f if line.strip()]
+
+    return labels
+
+
 def get_molecules(filename: str) -> list[oechem.OEMol]:
     """
     Extract a list of OpenEye Molecules from an SDF file.
@@ -55,7 +75,7 @@ def get_cluster_ref_mols(
     summary = []
     ref_mols = []
     for cluster_id, tmp_mols in cluster_dict.items():
-        ref_mol = GetCoreFragment(tmp_mols, 1, 18)
+        ref_mol = GetCoreFragment(tmp_mols, 5, 18)
         logger.info(f"Obtained reference molecule for cluster of size: {len(tmp_mols)}")
         if ref_mol is not None:
             oechem.OESetSDData(ref_mol, "CLUSTER_ID", str(cluster_id))

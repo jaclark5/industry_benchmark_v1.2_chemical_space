@@ -1,19 +1,26 @@
-"""Distance matrices using various similarity methods with available fingerprints.
+"""Compute and visualise greatest common substructures for each HDBSCAN cluster.
 
-The major outputs of this module are in the outputs directory:
+The major inputs of this module are:
 
-- outputs/distance_distributions.png
-    Plotted distributions of similarity values based on method and fingerprint input.
-- outputs/distances_{Tanimoto | Dice | Cosine}_{Circular | MACCS | LINGO}.txt files
-    The first line contains the number of molecules and subsequent rows containing the upper triangle arrays for
-    "OpenFF Industry Benchmark Season 1 v1.2"
-- outputs/removed_distance_{Tanimoto | Dice | Cosine}_{Circular | MACCS | LINGO}.txt files
-    Each row contains the distance between that molecule and all molecules in the Industry Benchmark v1.2.
+- ../1_import_data_process_fps/outputs/industry_benchmark_v1.2_unique_mols.sdf
+    SDF file of unique Industry Benchmark v1.2 molecules.
+- ../3_cluster/outputs/distances_{sim}_{fp}_{mcs}_{ms}.txt
+    Cluster label files from the full-matrix HDBSCAN sweep.
+- ../3_cluster/outputs_sparse/distances_{sim}_{fp}_{mcs}_{ms}.txt
+    Cluster label files from the sparse-matrix HDBSCAN sweep.
 
+The major outputs of this module are in the outputs/ directory:
+
+- outputs/{label}_{cluster_id}.pdf
+    Grid PDF of every molecule in clusters with ≤ 300 members.
+- outputs/{label}.csv
+    Summary CSV with columns: Cluster ID, N Cluster Molecules, SMILES.
+    Each row contains the greatest common fragment (GCS) SMILES for that cluster.
+- outputs/{label}.pdf
+    Grid PDF of the GCS reference molecule for each cluster.
 """
 
 import os
-import sys
 from collections import defaultdict
 
 from loguru import logger
@@ -22,22 +29,18 @@ from common_molecule_utilities import (
     get_molecules,
     get_cluster_ref_mols,
     print_structures,
+    get_cluster_labels,
 )
-
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "../4_PCA_plot_clusters"))
-)
-from pca_cluster_utilities import get_cluster_labels  # noqa: E402
 
 
 os.makedirs("outputs", exist_ok=True)
 
 logger.info("Get clusters for selected final contenders")
 selected_contenders = {
-    "sparse": [("DICE", "MACCS", 20, 2)],
+    "sparse": [("Dice", "MACCS", 20, 2)],
     "full": [
         ("Tanimoto", "MACCS", 10, 10),
-        ("DICE", "Circular", 10, 2),
+        ("Dice", "Circular", 10, 2),
         ("Tanimoto", "Circular", 10, 2),
     ],
 }

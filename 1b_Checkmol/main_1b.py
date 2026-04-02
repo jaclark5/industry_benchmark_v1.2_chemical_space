@@ -17,7 +17,7 @@ from fg_assess_utilities import (
     get_qca_ds,
     get_record_ids,
     get_functional_group_counts,
-    get_histogram,
+    get_occurrence_counts,
     draw_drug_patterns,
     plot_summary_stats,
 )
@@ -89,7 +89,7 @@ cutoff = 100
 logger.info(
     f"Plotting functional groups that are present in more than {cutoff} molecules"
 )
-cooccurrence_matrix, all_groups = get_histogram(
+occurrence_counts, all_groups = get_occurrence_counts(
     fg_breakdown_ib,
     "outputs/occurence_nondrug.png",
     cutoff=cutoff,
@@ -142,7 +142,7 @@ logger.info(
     f"Plotting functional groups that are present in more than {cutoff} molecules that were not tagged as drug-like"
 )
 nondrug_fg_breakdown = {smiles: fg_breakdown_ib[smiles] for smiles, _ in nondrug_smiles}
-cooccurrence_matrix, all_groups = get_histogram(
+occurrence_counts, all_groups = get_occurrence_counts(
     nondrug_fg_breakdown,
     "outputs/occurence_ib.png",
     cutoff=cutoff,
